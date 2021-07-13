@@ -8,6 +8,11 @@
 
 	<script type="text/javascript" src="{% static 'coloring/vendors/jquery/jquery-3.3.1.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'coloring/vendors/paper/paper-full.min.js' %}"></script>
+	<link rel="stylesheet" type="text/css" href="css/normalize.css" />
+	<link href="css/animate.css" rel="stylesheet"/>
+	<script type="text/javascript" src="js/paper.js"></script>
+	<script type="text/paperscript" canvas="myCanvas"></script>
+
 
 	<style type="text/css">
 		#color-palette {
@@ -35,7 +40,12 @@
 		    margin-right: auto;
 		    display: block;
 		}
+
+		
 	</style>
+
+	<script src="content/js/paper.js" type="text/javascript"></script>
+	<script type="text/paperscript" canvas="canvas"></script>
 
 	<script type="text/javascript" canvas="canvas">
 		window.onload = function() {
@@ -118,8 +128,9 @@
 	</script>
 </head>
 <body>
-
+	<div></div>
 	<canvas id="myCanvas" width="750px" height="750px"></canvas>
 	<div id="color-palette"></div>
+	
 </body>
 </html>

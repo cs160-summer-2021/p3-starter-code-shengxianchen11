@@ -4,19 +4,21 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  	<title>P3 Coloring</title>
+  	<title>Embellish</title>
 
 	<script type="text/javascript" src="{% static 'coloring/vendors/jquery/jquery-3.3.1.min.js' %}"></script>
-	<script type="text/javascript" src="{% static 'coloring/vendors/paper/paper-full.min.js' %}"></script>
-
+	<!-- <script type="text/javascript" src="{% static 'coloring/vendors/paper/paper-full.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'coloring/vendors/paper/paper-core.js' %}"></script> -->
+	<script type="text/javascript" src="{% static 'coloring/vendors/paper/paper-full.js' %}"></script>
+	<!-- <script type="text/javascript" src="{% static 'coloring/vendors/paper/paper-full.min.js' %}"></script> -->
+	<!-- <script type="text/javascript" src="js/paper.js"></script> -->
+	
 	<style type="text/css">
 		#color-palette {
 			width: 300px;
 			background-color: #f1f1f1;
 			display: flex;
 			flex-wrap: wrap;
-			position: absolute;
-			top: 0;
 		}
 
 		.swatch {
@@ -35,12 +37,46 @@
 		    margin-right: auto;
 		    display: block;
 		}
+		.adder::before {
+			content: "+";
+			width: 24px;
+			height: 24px;
+			-webkit-border-radius: 12px;
+			border-radius: 12px;
+			margin: 3px;
+		}
+
+		.button1{
+			border-radius: 50%;
+			height: 30px;
+		}
+
+		#rcp {
+			border-radius: 50%;
+		}
+
+		.top-container {
+			top: 0;
+			position: absolute;
+		}
+
+		.center {
+			text-align: center;
+			margin: auto;
+			padding: 10px;
+		}
+
+		.colorborder {
+			outline: 1px dashed darkblue;
+		}
+		
 	</style>
 
 	<script type="text/javascript" canvas="canvas">
+		var prev = "#000000";
 		window.onload = function() {
 			var canvas = document.getElementById('myCanvas');
-
+			var pp = null;
 			// coloring page
 			var mandala = {
 				item: null,
@@ -50,21 +86,32 @@
 
 			// color palette
 			var cp = {
-				history: ["#000000"], // black selected by default
+				history: ["#ffffff"], // black selected by default
 				options: [],
 				$container: $('#color-palette')
 			}
 
 			function myCustomInteraction() {
+				
 				var tool = new paper.Tool();
-
+				var bb = $("#brush").css("border-style");
 				tool.onMouseDown = function (event) {
+					var fb = $("#filler").css("border-style");
+					var bb = $("#brush").css("border-style");
+					if (fb == "none" && bb == "none") {
+						alert("Must select a tool to color");
+					}
 				    var hit = mandala.item.hitTest(event.point, { tolerance: 10, fill: true });
-				    if (hit) {
-				    		// Color pallette keeps track of the full history of colors, though we
-				    		// only color in with the most-recent color.
-				        hit.item.fillColor = cp.history[cp.history.length - 1];
+				    if (hit && fb != "none") {
+						hit.item.fillColor = cp.history[cp.history.length - 1];
 				    }
+				}
+				tool.onMouseDrag = function (event) {
+					var fb = $("#filler").css("border-style");
+					var bb = $("#brush").css("border-style");
+					if (bb != "none") {
+						makeTriangle(event.point, cp.history[cp.history.length - 1]);
+					}
 				}
 			}
 
@@ -72,15 +119,39 @@
 			function createColorPalette(colors){
 
 				// create a swatch for each color
-				for (var i = colors.length - 1; i >= 0; i--) {
+				for (var i = 0; i <= colors.length - 1; i++) {
 					var $swatch = $("<div>").css("background-color", colors[i])
 									   .addClass("swatch");
 					$swatch.click(function(){
 						// add color to the color palette history
 					  	cp.history.push($(this).css("background-color"));
+						$(this).addClass("colorborder");
+						if (!pp) {
+							pp = this;
+						} else {
+							$(pp).removeClass("colorborder");
+							pp = this;
+						}
 					});
 					cp.$container.append($swatch);
 				}
+				// var $new = $("<input type='color' id='colorpicker'>");
+				var $adder = $("<button>").addClass("adder").addClass("button1");
+				$adder.click(function() {
+					var a = document.getElementById("colorpicker").value;
+					cp.$container.empty();
+					cp.options.push(String(a));
+					createColorPalette(cp.options);
+					cp.history.push(String(a));
+				});
+				cp.$container.append($adder);
+				// cp.$container.append($new);
+			}
+
+
+			function makeTriangle(center_point, color){
+				var myCircle = new paper.Path.Circle(center_point, 20);
+				myCircle.fillColor = cp.history[cp.history.length - 1];
 			}
 
 			// loads a set of colors from a json to create a color palette
@@ -95,14 +166,28 @@
 				});
 			}
 
+			$("#eraser").click(function() {
+				cp.history.push("#ffffff");
+			})
+
+			$("#filler").click(function(){
+				$("#brush").css("border-style", "none");
+				$(this).css("border-style", "solid");
+			})
+
+			$("#brush").click(function(){
+				$("#filler").css("border-style", "none");
+				$(this).css("border-style", "solid");
+			})
+
+			
 			function init(custom){
 				paper.setup(canvas);
 				getColorsCreatePalette();
 
 				paper.project.importSVG(mandala.filePath, function(item) {
-					mandala.item = item._children["design-freepik"];
+					mandala.item = item.children["special"];
 				    paper.project.insertLayer(0,mandala.item);
-
 				    if (custom) {
 				    	myCustomInteraction();
 				    } else {
@@ -120,6 +205,26 @@
 <body>
 
 	<canvas id="myCanvas" width="750px" height="750px"></canvas>
-	<div id="color-palette"></div>
+	<div class="top-container" id="filler-content">
+		<div id="color-palette"></div>
+		<p> Select Color:    
+			<input type='color' id='colorpicker'>
+		</p>	
+		<span style="display: inline;">
+			<p>
+				Eraser:
+				<span class="eraser" id="eraser" style="width: 24px; height: 24px;">
+					<img src="https://png.pngtree.com/png-vector/20190326/ourlarge/pngtree-vector-eraser-icon-png-image_865243.jpg" style="width: 24px; height: 24px;">
+				</span>
+			</p>
+			
+		</span>
+	</div>
+	<div class="center">
+		<img src="https://img.icons8.com/ios/452/fill-color.png" style="width:5%; height: 5%;" id="filler">
+		<img src="https://static.vecteezy.com/system/resources/thumbnails/000/363/185/small/Universal__28149_29.jpg" style="width:5%; height:5%;" id="brush">
+	</div>
+	
+	
 </body>
 </html>
