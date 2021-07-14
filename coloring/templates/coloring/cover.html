@@ -1,0 +1,45 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Cover</title>
+
+	<link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="{% static '/vendors/bootstrap/css/bootstrap.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static '/css/main.css' %}" />
+
+	<script src="{% static '/vendors/jquery/jquery-3.3.1.min.js' %}"></script>
+	<script src="{% static '/vendors/jquery-ui/jquery-ui.min.js' %}"></script>
+    <style>
+        body{
+            background-image: url("https://shejidaxue.com/wp-content/uploads/2019/08/134436iocogz38th8u7cwh-768x511.jpg");
+            background-size:100% 170%;
+        }
+
+        .cover_name {
+            padding-top: 15%;
+            font-size: 120px;
+			text-align: center;
+			margin: auto;
+		}
+
+        .start_btn{
+            font-size: 80px;
+        }
+
+        
+    </style>
+
+</head>
+
+<body>
+	<div class="container cover_name" >
+        <!-- <div class = "cover_name" style="font-style: italic; color: rgb(158, 108, 240);">Embellish</div> -->
+        <div style="padding-top: 5%;">
+            <button class="btn-default btn-lg start_btn"><a href="home_page">Start</a></button>
+        </div>
+        	
+	</div>
+</body>
+</html>

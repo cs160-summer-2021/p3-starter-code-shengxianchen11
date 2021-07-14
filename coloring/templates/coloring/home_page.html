@@ -1,0 +1,37 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Home Page</title>
+
+	<link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="{% static '/vendors/bootstrap/css/bootstrap.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static '/css/main.css' %}" />
+
+	<script src="{% static '/vendors/jquery/jquery-3.3.1.min.js' %}"></script>
+	<script src="{% static '/vendors/jquery-ui/jquery-ui.min.js' %}"></script>
+    <style>
+        body{
+            background-image: url("http://img.jj20.com/up/allimg/tp06/200910135K0Oa-0-lp.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+    </style>
+
+</head>
+
+<body>
+	<div class="container" style="padding-left: 10%; padding-right: 20%;">
+		<div class="row">
+			<div class="col-12">
+				<h2>Choose the image to color</h2>
+				<ul class="list-group">
+				  <li class="list-group-item "><a href="new_interaction"><span style="padding-right: 5%; font-size: x-large;">mandala</span><img src="../../static/coloring/images/mandala-freepik.svg" width="100" height="100" title="mandala" alt="mandala"></a></li>
+				  <li class="list-group-item "><a href="triangle_coloring"><span style="padding-right: 5%; font-size: x-large;">triangles</span><img src="../../static/coloring/images/triangles.svg" width="100" height="100" title="triangles" alt="triangles"></a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
